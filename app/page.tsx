@@ -1,6 +1,22 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 
 export default function Home() {
+  const [userId, setUserId] = useState<string | null>(null);
+  const [userId2, setUserId2] = useState<string | null>(null);
+  const fetchUserId = async () => {
+    try {
+      const response = await fetch("/api/test");
+      const data = await response.json();
+      setUserId(data.userId);
+      setUserId2(data.userId2);
+    } catch (error) {
+      console.error("Error fetching user ID:", error);
+    }
+  };
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -48,6 +64,19 @@ export default function Home() {
             Read our docs
           </a>
         </div>
+
+        <button
+          onClick={fetchUserId}
+          className="px-4 py-2 mb-4 text-white bg-blue-500 rounded hover:bg-blue-600"
+        >
+          获取用户ID
+        </button>
+        {userId && (
+          <div className="p-4 bg-gray-100 rounded">
+            <p>用户ID: {userId}</p>
+            <p>用户ID2: {userId2}</p>
+          </div>
+        )}
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         <a
